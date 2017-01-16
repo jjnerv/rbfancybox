@@ -46,7 +46,7 @@ gulp.task("clean", function () {
 gulp.task("scripts", function () {
     return gulp.src(config.js)
         .pipe($.plumberNotifier())
-        .pipe($.concat("jquery.fancybox.min.js"))
+        .pipe($.concat("jquery.fancybox.pack.js"))
         .pipe($.uglify())
         .pipe(gulp.dest(dist.js));
 });
@@ -54,7 +54,7 @@ gulp.task("scripts", function () {
 gulp.task("styles", function () {
     return gulp.src(config.css)
         .pipe($.plumberNotifier())
-        .pipe($.concat("jquery.fancybox.min.css"))
+        .pipe($.concat("jquery.fancybox.css"))
         .pipe($.autoprefixer("last 5 version"))
         .pipe($.replace(/url\('?(.*)'?\)/g, "url('../images/fancybox/$1')"))
         .pipe($.replace("''", "'"))

@@ -1,6 +1,6 @@
 {
-    "name": "fancybox",
-    "title": "fancyBox",
+    "name": "rbfancybox",
+    "title": "rbfancybox",
     "description": "fancyBox offers an elegant way to present images, html content and multimedia for webpages",
     "keywords": [
         "lightbox",
@@ -10,7 +10,7 @@
         "window",
         "ui"
     ],
-    "version": "2.1.5",
+    "version": "1.0.11",
     "author": {
         "name": "Janis Skarnelis",
         "url": "http://fancyapps.com/contact/"
