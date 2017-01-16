@@ -242,3 +242,4 @@ Bug tracker
 -----------
 
 Have a bug? Please create an issue on GitHub at https://github.com/fancyapps/fancyBox/issues
+# rbfancybox
