@@ -10,7 +10,7 @@
         "window",
         "ui"
     ],
-    "version": "1.0.11",
+    "version": "1.0.16",
     "author": {
         "name": "Janis Skarnelis",
         "url": "http://fancyapps.com/contact/"
@@ -23,7 +23,7 @@
     ],
     "homepage": "http://fancyapps.com/fancybox/",
     "docs": "http://fancyapps.com/fancybox/#docs",
-    "download": "http://fancyapps.com/fancybox/#license",
+    "download": "https://github.com/jjnerv/rbfancybox.git",
     "bugs": "https://github.com/fancyapps/fancyBox/issues",
     "dependencies": {
         "jquery": ">=1.7"
