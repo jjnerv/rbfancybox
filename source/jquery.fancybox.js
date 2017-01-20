@@ -1399,7 +1399,7 @@
        viewport = F.getViewport(),
        margin   = current.margin,
        width    = F.wrap.width()  + margin[1] + margin[3],
-       height   = F.wrap.height() + margin[0] + margin[2],
+       height   = ((F.wrap[0].offsetHeight > 50)? F.wrap[0].offsetHeight : 475) + margin[0] + margin[2],
        rez      = {
          position: 'absolute',
          top  : margin[0],
