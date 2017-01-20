@@ -1,6 +1,6 @@
 /*!
  * fancyBox - jQuery Plugin
- * version: 1.0.8 (Fri, 14 Jun 2013)
+ * version: 2.1.5 (Fri, 14 Jun 2013)
  * @requires jQuery v1.6 or later
  *
  * Examples at http://fancyapps.com/fancybox/
@@ -13,9 +13,9 @@
  "use strict";
 
  var H = $("html"),
-     W = $(window),
-     D = $(document),
-     F = $.fancybox = function () {
+   W = $(window),
+   D = $(document),
+   F = $.fancybox = function () {
      F.open.apply( this, arguments );
    },
    IE =  navigator.userAgent.match(/msie/i),
@@ -634,8 +634,8 @@
    getViewport: function () {
      var locked = (F.current && F.current.locked) || false,
        rez    = {
-         x: W.width(),
-         y: W.height()
+         x: W.scrollLeft(),
+         y: W.scrollTop()
        };
 
      if (locked) {
@@ -646,9 +646,6 @@
        // See http://bugs.jquery.com/ticket/6724
        rez.w = isTouch && window.innerWidth  ? window.innerWidth  : W.width();
        rez.h = isTouch && window.innerHeight ? window.innerHeight : W.height();
-
-       console.log(W)
-
      }
 
      return rez;
@@ -1203,13 +1200,11 @@
        iframe,
        body;
 
-       console.log(F.getViewport());
-
      // Reset dimensions so we could re-check actual size
      wrap.add(skin).add(inner).width('auto').height('auto').removeClass('fancybox-tmp');
 
-     wPadding = getScalar(skin.outerWidth(true)  - skin[0].scrollWidth);
-     hPadding = getScalar(skin.outerHeight(true) - skin[0].scrollHeight);
+     wPadding = getScalar(skin.outerWidth(true)  - skin.width());
+     hPadding = getScalar(skin.outerHeight(true) - skin.height());
 
      // Any space between content and viewport (margin, padding, border, title)
      wSpace = wMargin + wPadding;
@@ -1252,12 +1247,11 @@
        }
 
        if (current.autoWidth) {
-         // raiz do problema
-         origWidth = inner[0].scrollWidth;
+         origWidth = inner[0].scrollWidth; // find div
        }
 
        if (current.autoHeight) {
-         origHeight = inner[0].scrollHeight;
+         origHeight = inner[0].scrollHeight; // find div
        }
 
        inner.removeClass( 'fancybox-tmp' );
@@ -1272,8 +1266,6 @@
      minWidth  = getScalar(isPercentage(minWidth) ? getScalar(minWidth, 'w') - wSpace : minWidth);
      maxWidth  = getScalar(isPercentage(maxWidth) ? getScalar(maxWidth, 'w') - wSpace : maxWidth);
 
-     console.log(maxWidth);
-
      minHeight = getScalar(isPercentage(minHeight) ? getScalar(minHeight, 'h') - hSpace : minHeight);
      maxHeight = getScalar(isPercentage(maxHeight) ? getScalar(maxHeight, 'h') - hSpace : maxHeight);
 
@@ -1284,7 +1276,6 @@
      if (current.fitToView) {
        maxWidth  = Math.min(viewport.w - wSpace, maxWidth);
        maxHeight = Math.min(viewport.h - hSpace, maxHeight);
-
      }
 
      maxWidth_  = viewport.w - wMargin;
@@ -1332,8 +1323,8 @@
        wrap.width( width + wPadding );
 
        // Real wrap dimensions
-       width_  = wrap[0].scrollWidth;
-       height_ = wrap[0].scrollHeight;
+       width_  = wrap.width();
+       height_ = wrap.height();
 
        if (current.aspectRatio) {
          while ((width_ > maxWidth_ || height_ > maxHeight_) && width > minWidth && height > minHeight) {
@@ -1359,8 +1350,8 @@
 
            wrap.width( width + wPadding );
 
-           width_  = wrap[0].scrollWidth;
-           height_ = wrap[0].scrollHeight;
+           width_  = wrap.width();
+           height_ = wrap.height();
          }
 
        } else {
@@ -1377,8 +1368,8 @@
 
      wrap.width( width + wPadding );
 
-     width_  = wrap[0].scrollWidth;
-     height_ = wrap[0].scrollHeight;
+     width_  = wrap.width();
+     height_ = wrap.height();
 
      canShrink = (width_ > maxWidth_ || height_ > maxHeight_) && width > minWidth && height > minHeight;
      canExpand = current.aspectRatio ? (width < origMaxWidth && height < origMaxHeight && width < origWidth && height < origHeight) : ((width < origMaxWidth || height < origMaxHeight) && (width < origWidth || height < origHeight));
@@ -1395,7 +1386,7 @@
        wPadding   : wPadding,
        hPadding   : hPadding,
        wrapSpace  : height_ - skin.outerHeight(true),
-       skinSpace  : skin[0].scrollHeight - height
+       skinSpace  : skin.height() - height
      });
 
      if (!iframe && current.autoHeight && height > minHeight && height < maxHeight && !canExpand) {
@@ -1407,9 +1398,8 @@
      var current  = F.current,
        viewport = F.getViewport(),
        margin   = current.margin,
-       width    = F.wrap[0].offsetWidth  + margin[1] + margin[3],
-       height   = ((F.wrap[0].offsetHeight > 50)? F.wrap[0].offsetHeight : 475) + margin[0] + margin[2],
-
+       width    = F.wrap.width()  + margin[1] + margin[3],
+       height   = F.wrap.height() + margin[0] + margin[2],
        rez      = {
          position: 'absolute',
          top  : margin[0],
@@ -1803,15 +1793,15 @@
      if (IE) {
        offsetWidth = Math.max(document.documentElement.offsetWidth, document.body.offsetWidth);
 
-       if (D[0].scrollWidth > offsetWidth) {
-         width = D[0].scrollWidth;
+       if (D.width() > offsetWidth) {
+         width = D.width();
        }
 
-     } else if (D[0].scrollWidth > W[0].scrollWidth) {
-       width = D[0].scrollWidth;
+     } else if (D.width() > W.width()) {
+       width = D.width();
      }
 
-     this.overlay.width(width).height(D[0].scrollHeight);
+     this.overlay.width(width).height(D.height());
    },
 
    // This is where we can manipulate DOM, because later it would cause iframes to reload
@@ -1826,7 +1816,7 @@
 
      if (opts.locked && this.fixed && obj.fixed) {
        if (!overlay) {
-         this.margin = D[0].scrollHeight > W[0].scrollHeight ? $('html').css('margin-right').replace("px", "") : false;
+         this.margin = D.height() > W.height() ? $('html').css('margin-right').replace("px", "") : false;
        }
 
        obj.locked = this.overlay.append( obj.wrap );
@@ -1923,7 +1913,7 @@
          title.appendTo('body');
 
          if (IE) {
-           title.width( title[0].scrollWidth );
+           title.width( title.width() );
          }
 
          title.wrapInner('<span class="child"></span>');
@@ -2019,11 +2009,11 @@
    });
 
    //Get real width of page scroll-bar
-   w1 = $(window)[0].scrollWidth;
+   w1 = $(window).width();
 
    H.addClass('fancybox-lock-test');
 
-   w2 = $(window)[0].scrollWidth;
+   w2 = $(window).width();
 
    H.removeClass('fancybox-lock-test');
 
